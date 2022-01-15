@@ -17,7 +17,7 @@ Install
 
 - Install via npm 
 
-  `npm install @sports-alliance/sports-lib --save`
+`npm install @thomaschampagne/sports-lib --save`
   
 Examples
 =======
@@ -26,7 +26,7 @@ Examples
 GPX
 ---
 ```typescript
-import {SportsLib} from '@sports-alliance/sports-lib';
+import {SportsLib} from '@thomaschampagne/sports-lib';
 
 // For GPX you need a string 
 const gpxString = 'Some string from a file etc';
@@ -40,7 +40,7 @@ SportsLib.importFromGPX(gpxString).then((event)=>{
 TCX
 ---
 ```typescript
-import {SportsLib} from '@sports-alliance/sports-lib';
+import {SportsLib} from '@thomaschampagne/sports-lib';
 
 // For TCX you need a string 
 const tcxString = 'Some string from a file etc';
@@ -55,7 +55,7 @@ SportsLib.importFromTCX((new DOMParser()).parseFromString(tcxString, 'applicatio
 FIT
 ---
 ```typescript
-import {SportsLib} from '@sports-alliance/sports-lib';
+import {SportsLib} from '@thomaschampagne/sports-lib';
 
 // For FIT you need an ArrayBuffer (binary) 
 SportsLib.importFromFit(arrayBuffer).then((event)=>{
@@ -83,8 +83,8 @@ Example converting a FIT file to GPX
 Thanks to [@guikeller](https://github.com/guikeller)
 ```typescript 
 import fs from 'fs';
-import sportsLibPkg from '@sports-alliance/sports-lib';
-import exporterPkg from '@sports-alliance/sports-lib/lib/events/adapters/exporters/exporter.gpx.js'
+import sportsLibPkg from '@thomaschampagne/sports-lib';
+import exporterPkg from '@thomaschampagne/sports-lib/lib/events/adapters/exporters/exporter.gpx.js'
 
 const { SportsLib } = sportsLibPkg;
 const { EventExporterGPX } = exporterPkg;
