@@ -5,14 +5,16 @@ import { DurationClassInterface } from '../duration/duration.class.interface';
 import { EventJSONInterface } from './event.json.interface';
 import { IDClassInterface } from '../id/id.class.interface';
 import { PrivacyClassInterface } from '../privacy/privacy.class.interface';
+import { FileType } from './adapters/file-type.enum';
 
-export interface EventInterface extends StatsClassInterface,
-  DurationClassInterface,
-  PrivacyClassInterface,
-  SerializableClassInterface,
-  IDClassInterface {
-
+export interface EventInterface
+  extends StatsClassInterface,
+    DurationClassInterface,
+    PrivacyClassInterface,
+    SerializableClassInterface,
+    IDClassInterface {
   name: string;
+  srcFileType: FileType;
   description?: string;
   isMerge: boolean;
 
@@ -36,6 +38,7 @@ export interface EventInterface extends StatsClassInterface,
 
   getLastActivity(): ActivityInterface;
 
-  toJSON(): EventJSONInterface;
+  isMultiSport(): boolean;
 
+  toJSON(): EventJSONInterface;
 }

@@ -1,7 +1,10 @@
 import {
-  DataSpeed, DataSpeedFeetPerMinute,
+  DataSpeed,
+  DataSpeedFeetPerMinute,
   DataSpeedFeetPerSecond,
-  DataSpeedKilometersPerHour, DataSpeedMetersPerMinute,
+  DataSpeedKilometersPerHour,
+  DataSpeedKnots,
+  DataSpeedMetersPerMinute,
   DataSpeedMilesPerHour
 } from './data.speed';
 
@@ -47,6 +50,15 @@ export class DataSpeedMinMetersPerMinute extends DataSpeedMetersPerMinute {
 
 export class DataSpeedMinFeetPerMinute extends DataSpeedFeetPerMinute {
   static type = 'Minimum speed in feet per minute';
+  static displayType = DataSpeedMin.type;
+
+  getDisplayType(): string {
+    return super.getDisplayType();
+  }
+}
+
+export class DataSpeedMinKnots extends DataSpeedKnots {
+  static type = 'Minimum speed in knot';
   static displayType = DataSpeedMin.type;
 
   getDisplayType(): string {

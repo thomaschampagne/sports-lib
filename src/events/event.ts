@@ -7,19 +7,30 @@ import { Privacy } from '../privacy/privacy.class.interface';
 import { ActivityTypes } from '../activities/activity.types';
 import { DataActivityTypes } from '../data/data.activity-types';
 import { DataDeviceNames } from '../data/data.device-names';
+import { ActivityJSONInterface } from '../activities/activity.json.interface';
+import { FileType } from './adapters/file-type.enum';
 
 export class Event extends DurationClassAbstract implements EventInterface {
-
   public name: string;
+  public srcFileType: FileType;
   public description?: string;
   public privacy: Privacy = Privacy.Private;
   public isMerge: boolean;
 
   private activities: ActivityInterface[] = [];
 
-  constructor(name: string, startDate: Date, endDate: Date, privacy?: Privacy, description?: string, isMerge = false) {
+  constructor(
+    name: string,
+    startDate: Date,
+    endDate: Date,
+    srcFileType: FileType,
+    privacy?: Privacy,
+    description?: string,
+    isMerge = false
+  ) {
     super(startDate, endDate);
     this.name = name;
+    this.srcFileType = srcFileType;
     if (privacy) {
       this.privacy = privacy;
     }
@@ -42,12 +53,11 @@ export class Event extends DurationClassAbstract implements EventInterface {
   }
 
   removeActivity(activityToRemove: ActivityInterface) {
-    this.activities = this.activities.filter((activity) => activityToRemove.getID() !== activity.getID());
+    this.activities = this.activities.filter(activity => activityToRemove.getID() !== activity.getID());
   }
 
   getActivities(): ActivityInterface[] {
     this.sortActivities(); // PErhaps move on adding ? Lets check performance
-    // debugger
     return this.activities;
   }
 
@@ -66,7 +76,7 @@ export class Event extends DurationClassAbstract implements EventInterface {
   getActivityTypesAsArray(): string[] {
     const activityTypesStat = <DataActivityTypes>this.getStat(DataActivityTypes.type);
     if (!activityTypesStat) {
-      throw new Error(`Event with id ${this.getID()} has no activity types`)
+      throw new Error(`Event with id ${this.getID()} has no activity types`);
     }
     return activityTypesStat.getValue();
   }
@@ -74,17 +84,21 @@ export class Event extends DurationClassAbstract implements EventInterface {
   getActivityTypesAsString(): string {
     const activityTypesStat = <DataActivityTypes>this.getStat(DataActivityTypes.type);
     if (!activityTypesStat) {
-      throw new Error(`Event with id ${this.getID()} has no activity types`)
+      throw new Error(`Event with id ${this.getID()} has no activity types`);
     }
-    return activityTypesStat.getValue().length > 1 ?
-      `${this.getUniqueStringWithMultiplier(activityTypesStat.getValue().map((activityType: string) => ActivityTypes[<keyof typeof ActivityTypes>activityType]))}`
-      : ActivityTypes[<keyof typeof ActivityTypes>activityTypesStat.getDisplayValue()]
+    return activityTypesStat.getValue().length > 1
+      ? `${this.getUniqueStringWithMultiplier(
+          activityTypesStat
+            .getValue()
+            .map((activityType: string) => ActivityTypes[<keyof typeof ActivityTypes>activityType])
+        )}`
+      : ActivityTypes[<keyof typeof ActivityTypes>activityTypesStat.getDisplayValue()];
   }
 
   getDeviceNamesAsString(): string {
     const deviceNamesStat = <DataDeviceNames>this.getStat(DataDeviceNames.type);
     if (!deviceNamesStat) {
-      throw new Error(`Event with id ${this.getID()} has no device names`)
+      throw new Error(`Event with id ${this.getID()} has no device names`);
     }
     return `${this.getUniqueStringWithMultiplier(deviceNamesStat.getValue())}`;
   }
@@ -104,14 +118,20 @@ export class Event extends DurationClassAbstract implements EventInterface {
       }
       return uniqueObj;
     }, {});
-    return Object.keys(uniqueObject).reduce((uniqueArray: any[], key, index, object) => {
-      if (uniqueObject[key] === 1) {
-        uniqueArray.push(key);
-      } else {
-        uniqueArray.push(uniqueObject[key] + 'x ' + key);
-      }
-      return uniqueArray;
-    }, []).join(', ');
+    return Object.keys(uniqueObject)
+      .reduce((uniqueArray: any[], key, index, object) => {
+        if (uniqueObject[key] === 1) {
+          uniqueArray.push(key);
+        } else {
+          uniqueArray.push(uniqueObject[key] + 'x ' + key);
+        }
+        return uniqueArray;
+      }, [])
+      .join(', ');
+  }
+
+  isMultiSport(): boolean {
+    return !this.isMerge && this.getActivities().length > 1;
   }
 
   toJSON(): EventJSONInterface {
@@ -121,12 +141,18 @@ export class Event extends DurationClassAbstract implements EventInterface {
     });
     return {
       name: this.name,
+      srcFileType: this.srcFileType,
       description: this.description || null,
       privacy: this.privacy,
       startDate: this.startDate.getTime(),
       endDate: this.endDate.getTime(),
       stats: stats,
-      isMerge: this.isMerge
+      isMerge: this.isMerge,
+      activities: this.getActivities().reduce((activities: ActivityJSONInterface[], activity: ActivityInterface) => {
+        const jsonActivity = activity.toJSON();
+        activities.push(jsonActivity);
+        return activities;
+      }, [])
     };
   }
 }

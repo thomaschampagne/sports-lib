@@ -6,10 +6,13 @@ export class DataPace extends DataDuration {
   static unit = 'min/km';
 
   getDisplayValue(): string {
+    if (this.getValue() === Infinity || this.getValue() === -Infinity) {
+      return '00:00';
+    }
     const d = this.getValue();
     const h = Math.floor(d / 3600);
-    const m = Math.floor(d % 3600 / 60);
-    const s = Math.floor(d % 3600 % 60);
+    const m = Math.floor((d % 3600) / 60);
+    const s = Math.floor((d % 3600) % 60);
     if (!m && !h) {
       return '00:' + ('0' + s).slice(-2);
     } else if (!h) {
@@ -20,7 +23,7 @@ export class DataPace extends DataDuration {
   }
 
   getDisplayUnit(): string {
-    return this.getUnit()
+    return this.getUnit();
   }
 
   getValue(formatForDataType?: string): number {
@@ -28,7 +31,7 @@ export class DataPace extends DataDuration {
       case DataPaceMinutesPerMile.type:
         return convertPaceToPaceInMinutesPerMile(this.value);
       default:
-        return super.getValue(formatForDataType)
+        return super.getValue(formatForDataType);
     }
   }
 }

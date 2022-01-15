@@ -1,6 +1,6 @@
 import { Privacy } from '../privacy/privacy.class.interface';
 import { UserInterface } from './user.interface';
-import { UserSettingsInterface } from './user.settings.interface';
+import { UserSettingsInterface } from './settings/user.settings.interface';
 
 export class User implements UserInterface {
   uid: string;
@@ -9,12 +9,16 @@ export class User implements UserInterface {
   acceptedPrivacyPolicy = false;
   acceptedTrackingPolicy = false;
   acceptedDiagnosticsPolicy = false;
+  creationDate?: Date;
+  lastSignInDate?: Date;
+  isCoach?: boolean;
 
   brandText?: string;
   photoURL?: string;
   displayName?: string;
   description?: string;
   settings?: UserSettingsInterface;
+  lastSeenPromo?: number;
 
   constructor(userID: string, displayName?: string, photoURL?: string, privacy?: Privacy, description?: string) {
     this.uid = userID;
@@ -44,7 +48,7 @@ export class User implements UserInterface {
       photoURL: this.photoURL || null,
       displayName: this.displayName || null,
       description: this.description || null,
-      settings: this.settings ? this.settings : null,
-    }
+      settings: this.settings ? this.settings : null
+    };
   }
 }

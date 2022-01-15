@@ -1,0 +1,25 @@
+# Generated data
+docs
+lib
+coverage
+node_modules
+
+# OS/IDE
+.vscode
+.idea
+.DS_Store
+
+# Others
+*.json
+*.md
+*.yml
+*.log
+.editorconfig
+.gitignore
+.prettierignore
+LICENSE
+
+# Lib specific
+*.gpx
+*.tcx
+*.fit

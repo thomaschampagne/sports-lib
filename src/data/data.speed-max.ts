@@ -3,6 +3,7 @@ import {
   DataSpeedFeetPerMinute,
   DataSpeedFeetPerSecond,
   DataSpeedKilometersPerHour,
+  DataSpeedKnots,
   DataSpeedMetersPerMinute,
   DataSpeedMilesPerHour
 } from './data.speed';
@@ -49,6 +50,15 @@ export class DataSpeedMaxMetersPerMinute extends DataSpeedMetersPerMinute {
 
 export class DataSpeedMaxFeetPerMinute extends DataSpeedFeetPerMinute {
   static type = 'Maximum speed in feet per minute';
+  static displayType = DataSpeedMax.type;
+
+  getDisplayType(): string {
+    return super.getDisplayType();
+  }
+}
+
+export class DataSpeedMaxKnots extends DataSpeedKnots {
+  static type = 'Maximum speed in knots';
   static displayType = DataSpeedMax.type;
 
   getDisplayType(): string {

@@ -1,5 +1,6 @@
 import { SerializableClassInterface } from '../serializable/serializable.class.interface';
 import { StreamJSONInterface } from './stream';
+import { StreamFilterInterface } from './stream.filter.interface';
 
 /**
  * A stream consists of an array of data like this for example
@@ -11,12 +12,27 @@ import { StreamJSONInterface } from './stream';
  * null means no value and that means missing data.
  */
 export interface StreamInterface extends SerializableClassInterface {
-
   /**
    * Type of the string. Can be any of the datatypes stored in the dataStore.
    * @todo make this an 'enum'
    */
   type: string;
+
+  /**
+   * Instructs the stream to use a specific filter when asking for data
+   * @param filter
+   */
+  useFilter(filter: StreamFilterInterface): this;
+
+  /**
+   * Removes any filter that is used on the Streamm
+   */
+  clearFilters(): this;
+
+  /**
+   * Checks if a stream has a filter
+   */
+  hasFilter(): boolean;
 
   /**
    * Get's back the streams data as an array
@@ -32,19 +48,12 @@ export interface StreamInterface extends SerializableClassInterface {
   setData(data: (number | null)[]): this;
 
   /**
-   * Returns an array of time as of duration in seconds for the current data
-   * @param onlyNumeric
-   * @param filterInfinity
-   */
-  getDurationOfData(onlyNumeric?: boolean, filterInfinity?: boolean): (number | null)[]
-
-  /**
    * Gets the data based / offset on a startDate
    * @param startDate
    * @param onlyNumeric
    * @param filterInfinity
    */
-  getStreamDataByTime(startDate: Date, onlyNumeric?: boolean, filterInfinity?: boolean): StreamDataItem[]
+  getStreamDataByTime(startDate: Date, onlyNumeric?: boolean, filterInfinity?: boolean): StreamDataItem[];
 
   /**
    * Gets the data offset on a time
@@ -52,13 +61,15 @@ export interface StreamInterface extends SerializableClassInterface {
    * @param onlyNumeric
    * @param filterInfinity
    */
-  getStreamDataByDuration(offset?: number, onlyNumeric?: boolean, filterInfinity?: boolean): StreamDataItem[]
+  getStreamDataByDuration(offset?: number, onlyNumeric?: boolean, filterInfinity?: boolean): StreamDataItem[];
 
   /**
-   * Checks if the current stream is unit derived metric.
-   * Eg speed is m/s if the current stream is speed in km/h this returns true
+   * Checks if the speed is exportable
+   * - It should not be speed derived stream
+   * - It should not be unit derived stream
+   * - It should not be GNSS distance and other types on blacklist
    */
-  isUnitDerivedDataType(): boolean;
+  isExportable(): boolean;
 
   toJSON(): StreamJSONInterface;
 }
@@ -69,7 +80,7 @@ export interface StreamDataItem {
    * The time of the value
    * Can be time as of date or just time in ms
    */
-  time: number,
+  time: number;
 
-  value: number | null
+  value: number | null;
 }

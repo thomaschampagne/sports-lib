@@ -1,6 +1,6 @@
 import { PrivacyClassInterface } from '../privacy/privacy.class.interface';
 import { SerializableClassInterface } from '../serializable/serializable.class.interface';
-import { UserSettingsInterface } from './user.settings.interface';
+import { UserSettingsInterface } from './settings/user.settings.interface';
 
 export interface UserInterface extends PrivacyClassInterface, SerializableClassInterface {
   uid: string;
@@ -8,7 +8,7 @@ export interface UserInterface extends PrivacyClassInterface, SerializableClassI
   acceptedDataPolicy: boolean;
   acceptedTrackingPolicy: boolean;
   acceptedDiagnosticsPolicy: boolean;
-  brandText?: string
+  brandText?: string;
   photoURL?: string;
   displayName?: string;
   description?: string;
